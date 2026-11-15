@@ -3,7 +3,7 @@
 import random
 import unittest
 
-from engine import match, tournament
+from moteur import match, tournament
 from strategies import AllD, Random, TitForTat, Tester, Joss, BASE
 
 
@@ -96,14 +96,14 @@ class TestModifications(unittest.TestCase):
             match(mk(AllD), mk(AllD), 10, 0.05)
 
     def test_horizon_length_mean(self):
-        from engine import draw_length
+        from moteur import draw_length
         rng = random.Random(0)
         lengths = [draw_length(rng, 0.99) for _ in range(5000)]
         mean = sum(lengths) / len(lengths)
         self.assertAlmostEqual(mean, 100, delta=5)  # 1 / (1 - 0.99) = 100
 
     def test_evolution_shares_sum_to_one(self):
-        from engine import evolution
+        from moteur import evolution
         names, h2h, _, games = tournament(BASE, seed=0)
         hist = evolution(names, h2h, games, 50)
         for shares in hist:
@@ -111,7 +111,7 @@ class TestModifications(unittest.TestCase):
 
     def test_evolution_alld_vs_tft_only(self):
         # Population TFT + ALL-D : TFT gagne 3/tour contre lui-même, ALL-D 2 -> TFT envahit
-        from engine import evolution
+        from moteur import evolution
         names, h2h, _, games = tournament([TitForTat, AllD], seed=0)
         hist = evolution(names, h2h, games, 200)
         self.assertGreater(hist[-1]["TIT-FOR-TAT"], 0.99)
