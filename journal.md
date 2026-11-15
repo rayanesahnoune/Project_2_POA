@@ -7,7 +7,7 @@
 - Self-play : activé.
 Chaque stratégie joue aussi contre son double, comme dans le tournoi d’Axelrod. Ça représente le fait qu’un agent peut rencontrer des agents qui lui ressemblent.
 Ce choix compte beaucoup : les stratégies gentilles gagnent beaucoup contre elles-mêmes (TIT-FOR-TAT contre TIT-FOR-TAT = 3 000 points, coopération totale), alors qu’ALL-D gagne peu contre lui-même (2 000 points, trahison totale).
-J’ai testé les deux versions : avec self-play, TESTER gagne ; sans self-play, ALL-D gagne. Le gagnant dépend donc d’un simple choix de protocole.
+J’ai testé les deux versions :avec self-play, TIT-FOR-TAT gagne ; sans self-play, ALL-D gagne. Le gagnant dépend donc d’un simple choix de protocole.
 J’ai gardé le self-play pour la suite, parce que c’est le format d’Axelrod et que la sélection (étape 3) en a besoin : une stratégie qui se multiplie rencontre forcément ses copies.
 
 ## Stratégies
@@ -78,3 +78,13 @@ TFT ne remporte aucun duel direct, mais bénéficie d'un avantage important lors
    Dans le tournoi d'Axelrod, il y avait beaucoup plus de programmes, et beaucoup étaient gentils
 2. **Le protocole compte.** Le simple fait d'inclure ou non le self-play change le gagnant.
    Le résultat d'un tournoi dépend autant des règles du tournoi que des stratégies.
+
+## Impasses 
+1. **Première version de TESTER différente du cours.** Ma première version suivait une autre
+   définition (TESTER s'excusait avant de passer en TFT, et trahissait un tour sur deux contre
+   un naïf). Après comparaison avec la diapositive du CM4, je l'ai corrigée. Le classement a changé :
+   avec self-play, TESTER était 1er et TFT 2e ; après correction, TFT est 1er et TESTER 3e.
+   Un petit détail dans la règle d'une seule stratégie suffit à changer le gagnant.
+   L'ancienne version est visible dans l'historique git.
+2. **GENEROUS-TFT remplacée par TF2T** à l'étape 2, car elle est présentée dans le CM4
+   et le sujet demande des stratégies absentes du cours.
