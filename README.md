@@ -44,6 +44,7 @@ Sélection sur 100 générations (sans puis avec bruit) :
 ```bash
 python main.py --population etendue --seed 42 --evolution 100
 python main.py --population etendue --seed 42 --noise 0.05 --evolution 100
+python main.py --population etendue --seed 42 --noise 0.05 --evolution 1000
 ```
 
 ## Options
