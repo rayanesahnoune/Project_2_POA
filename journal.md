@@ -88,3 +88,66 @@ TFT ne remporte aucun duel direct, mais bénéficie d'un avantage important lors
    L'ancienne version est visible dans l'historique git.
 2. **GENEROUS-TFT remplacée par TF2T** à l'étape 2, car elle est présentée dans le CM4
    et le sujet demande des stratégies absentes du cours.
+
+
+## Étape 2 – Nouvelles stratégies
+
+J'ajoute deux stratégies absentes du cours. Je les ai choisies parce qu'elles pardonnent, mais de deux façons différentes ,ce qui devrait compter à l’étape 3 avec le bruit :
+
+1. PAVLOV pardonne en réagissant à son propre résultat.
+2. TF2T pardonne en tolérant une trahison isolée.
+
+### PAVLOV (Win-Stay, Lose-Shift)
+- Règle : C au premier tour. Ensuite, si le dernier tour a bien rapporté (3 ou 5 points), il rejoue
+  le même coup ; sinon (0 ou 2 points), il change. Autrement dit : il coopère si les deux joueurs
+  ont joué la même chose au tour précédent.
+- Origine : Nowak et Sigmund (1993).
+- Devrait bien jouer contre : les stratégies gentilles et lui-même (coopération totale). Après une
+  erreur entre deux PAVLOV, la coopération revient en deux tours.
+- Devrait mal jouer contre : ALL-D. Il perd (0 point), change pour D (2 points), considère que 2 c'est
+  « perdu » donc rechange pour C… il alterne C, D, C, D et se fait exploiter un tour sur deux.
+
+### TF2T (Tit-for-Two-Tats)
+- Règle : coopère, et ne trahit que si l'adversaire a trahi aux **deux** derniers tours.
+  Une trahison isolée est pardonnée.
+- Origine : proposée par John Maynard Smith au second tournoi d'Axelrod.
+- Devrait bien jouer contre : les stratégies gentilles, et JOSS : elle ignore ses trahisons isolées,
+  donc pas de cycle de vengeance.
+- Devrait mal jouer contre : les stratégies qui trahissent de temps en temps sans jamais trahir
+  deux fois de suite : elle ne riposte jamais et se fait exploiter.
+
+
+  ### Commande
+```bash
+python main.py --population etendue --seed 42
+```
+
+### Résultats
+
+![Étape 2](captures/etandue_1.png)
+
+
+### Comparaison avec l'étape 1
+
+1. **TIT-FOR-TAT reste premier et creuse l'écart** (18 086 contre 17 087 pour ALL-D, environ 1 000 points
+   d'avance au lieu de 470). Les deux nouvelles stratégies sont gentilles : TFT gagne 3 000 points contre
+   chacune, alors qu'ALL-D ne fait que 2 030 contre TF2T.
+
+2. **TF2T est 2e, mais elle se fait exploiter.** Comme prévu dans sa fiche, elle fait mieux que TFT contre
+   JOSS (2 702 contre 2 094), car elle ignore ses trahisons isolées. Mais je n'avais pas prévu sa faiblesse
+   face à **TESTER** (1 995 pour TF2T, 3 670 pour TESTER). Le rythme de TESTER est C, C, D : il ne trahit
+   **jamais deux fois de suite**, donc TF2T ne riposte jamais. Et comme TF2T ne joue jamais D, TESTER ne passe
+   jamais en mode TFT : il l'exploite jusqu'à la fin. Même chose avec RANDOM (1 985 pour TF2T, 3 270 pour
+   RANDOM). Trop pardonner coûte cher.
+
+3. **PAVLOV n'est que 5e** à cause d'ALL-D : seulement 1 000 points (alternance C, D), alors qu'ALL-D fait
+   3 500 contre lui. Comme prévu, PAVLOV est excellent avec les gentils (3 000) mais très vulnérable face
+   à un traître systématique.
+
+4. **ALL-D descend de la 2e à la 3e place**, malgré ses 3 500 points contre PAVLOV. Chaque nouvelle stratégie
+   gentille profite surtout à TFT.
+
+5. **TESTER gagne surtout grâce à TF2T** (3 670 points). Sans cette proie, il serait bien plus bas.
+
+
+**Conclusion:** L'ajout de stratégies coopératives favorise TIT-FOR-TAT. Cependant, trop pardonner (TF2T) ou ne pas punir efficacement (PAVLOV face à ALL-D) peut être désavantageux face aux stratégies opportunistes. TFT doit son succès à son équilibre entre coopération et riposte immédiate. Enfin, les résultats dépendent toujours de la composition de la population.
