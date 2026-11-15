@@ -3,7 +3,7 @@
 import random
 import unittest
 
-from moteur import match, tournament
+from engine import match, tournament
 from strategies import AllD, Random, TitForTat, Tester, Joss, BASE
 
 
@@ -27,21 +27,21 @@ class TestMatch(unittest.TestCase):
         self.assertEqual((s1, s2), (400, 400))
 
     def test_tester_exploits_tft_free_partner(self):
-        # Contre un coopérateur inconditionnel, TESTER : D C C D C D C ...
+        # Contre un coopérateur inconditionnel, TESTER : D puis C, C, D répété
         class AllC(TitForTat):
             name = "ALL-C"
             def play(self, m, o):
                 return "C"
         _, _, h, _ = match(mk(Tester), mk(AllC), 8)
-        self.assertEqual("".join(h), "DCCDCDCD")
+        self.assertEqual("".join(h), "DCCDCCDC")
 
     def test_tester_vs_tft(self):
         # TFT riposte au tour 2 -> TESTER s'excuse au tour 3 puis TFT.
         # T1 : TESTER D / TFT C ; T2 : C / D (TFT riposte) ;
-        # T3 : TESTER s'excuse (C) / TFT C ; ensuite coopération mutuelle.
+        # T3 : TESTER passe en TFT et copie le D ; TFT copie le C -> écho sans fin.
         _, _, ht, hf = match(mk(Tester), mk(TitForTat), 6)
-        self.assertEqual("".join(ht), "DCCCCC")
-        self.assertEqual("".join(hf), "CDCCCC")
+        self.assertEqual("".join(ht), "DCDCDC")
+        self.assertEqual("".join(hf), "CDCDCD")
 
     def test_random_deterministic(self):
         _, _, h1, _ = match(mk(Random, 7), mk(AllD), 50)
@@ -65,11 +65,19 @@ class TestNewStrategies(unittest.TestCase):
         s1, s2, _, _ = match(mk(Pavlov), mk(TitForTat), 200)
         self.assertEqual((s1, s2), (600, 600))
 
-    def test_gtft_forgives_sometimes(self):
-        from strategies import GenerousTFT
-        _, _, h, _ = match(mk(GenerousTFT, 3), mk(AllD), 200)
-        self.assertEqual(h[0], "C")
-        self.assertIn("C", h[1:])
+    def test_tf2t_forgives_single_defection(self):
+        from strategies import TitForTwoTats
+        class OneD(TitForTat):
+            name = "ONE-D"
+            def play(self, m, o):
+                return "D" if len(m) == 1 else "C"
+        _, _, h, _ = match(mk(TitForTwoTats), mk(OneD), 5)
+        self.assertEqual("".join(h), "CCCCC")
+
+    def test_tf2t_vs_alld(self):
+        from strategies import TitForTwoTats
+        _, _, h, _ = match(mk(TitForTwoTats), mk(AllD), 5)
+        self.assertEqual("".join(h), "CCDDD")
 
 
 class TestModifications(unittest.TestCase):
@@ -88,14 +96,14 @@ class TestModifications(unittest.TestCase):
             match(mk(AllD), mk(AllD), 10, 0.05)
 
     def test_horizon_length_mean(self):
-        from moteur import draw_length
+        from engine import draw_length
         rng = random.Random(0)
         lengths = [draw_length(rng, 0.99) for _ in range(5000)]
         mean = sum(lengths) / len(lengths)
         self.assertAlmostEqual(mean, 100, delta=5)  # 1 / (1 - 0.99) = 100
 
     def test_evolution_shares_sum_to_one(self):
-        from moteur import evolution
+        from engine import evolution
         names, h2h, _, games = tournament(BASE, seed=0)
         hist = evolution(names, h2h, games, 50)
         for shares in hist:
@@ -103,7 +111,7 @@ class TestModifications(unittest.TestCase):
 
     def test_evolution_alld_vs_tft_only(self):
         # Population TFT + ALL-D : TFT gagne 3/tour contre lui-même, ALL-D 2 -> TFT envahit
-        from moteur import evolution
+        from engine import evolution
         names, h2h, _, games = tournament([TitForTat, AllD], seed=0)
         hist = evolution(names, h2h, games, 200)
         self.assertGreater(hist[-1]["TIT-FOR-TAT"], 0.99)
