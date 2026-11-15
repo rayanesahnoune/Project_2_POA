@@ -26,7 +26,7 @@ python main.py --population base --seed 42
 python main.py --population base --seed 42 --no-self-play
 ```
 
-### Étape 2 – population élargie (+ PAVLOV, GENEROUS-TFT)
+### Étape 2 – population élargie (+ PAVLOV, TF2T)
 ```bash
 python main.py --population etendue --seed 42
 ```
