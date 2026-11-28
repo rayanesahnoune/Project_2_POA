@@ -169,3 +169,12 @@ et lancé moi-même toutes les expériences.
 
     ![règles](captures/regles.png)
  
+
+ - **Les paires :** avec 6 agents, chaque agent apparaît exactement une fois dans les paires.
+- **Une première partie (graine 0, N = 100, m = 10) :** on part de 52 % de rouge, et le rouge l'emporte :
+  au tour 24 avec HCR, au tour 31 avec MAJORITÉ.
+  Les 10 premiers tours sont identiques pour les deux règles : tant qu'un agent a vu moins de 10 couleurs,
+  sa mémoire et son compte contiennent la même chose. MAJORITÉ avance par paliers, car après un nombre
+  pair de rencontres, beaucoup d'agents sont à égalité et gardent leur couleur.
+
+  ![partie](captures/partie.png)
