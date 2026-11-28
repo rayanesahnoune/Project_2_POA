@@ -23,6 +23,11 @@
  
 **Représentation d'un agent :** sa couleur, son dernier gain, et ce qu'il a vu chez ses partenaires
 de deux façons : sa **mémoire** (les m dernières couleurs seulement) et son **compte** (tout depuis le début).
+
+**Mémoire individuelle :** chaque agent a sa propre mémoire, remplie uniquement avec les couleurs
+de ses propres partenaires. La mémoire n'est pas partagée et aucun agent ne voit la population entière
+(consigne du cours). La part de rouge dans toute la population ne sert qu'à mesurer le résultat,
+jamais à la décision d'un agent.
  
 ## Règles du cours
  
@@ -156,6 +161,11 @@ et lancé moi-même toutes les expériences.
 - **Mémoire de l'agent :** un agent BLEU avec une mémoire de 2 voit R, R, B. À la fin, sa mémoire contient
   R, B (le premier R est sorti), mais son compte garde R = 2, B = 1. Son dernier gain vaut 1.
   ![agent](captures/agent.png)
-- **HCR :** un agent BLEU a vu R, R, B. Porter rouge lui aurait rapporté 2 points, porter bleu 1 point :
-  il passe ROUGE.
+- **HCR et MAJORITÉ ne décident pas pareil :** un agent ROUGE avec une mémoire de 3 voit
+  R, R, R, R, R, B, B, R. Sa mémoire contient B, B, R, mais son compte vaut R = 6, B = 2.
+  HCR ne regarde que la mémoire (2 B contre 1 R) : il passe BLEU.
+  MAJORITÉ regarde tout le compte (6 R contre 2 B) : il reste ROUGE.
+- **Égalité :** un agent BLEU qui a vu R et B garde sa couleur, avec les deux règles.
+
+    ![règles](captures/regles.png)
  
